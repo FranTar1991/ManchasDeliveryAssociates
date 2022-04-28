@@ -256,13 +256,13 @@
                         android:checked="@{viewModel.isChecked}"
                         android:padding="16dp"
                         android:text="@string/share_location"
-                        app:layout_constraintBottom_toTopOf="@+id/user_address_txt"
+                        app:layout_constraintBottom_toTopOf="@+id/userAddressBtn"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
-                        android:id="@+id/user_address_txt"
+                        android:id="@+id/userAddressBtn"
                         style="@style/large_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -276,6 +276,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/location_b_address"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:setTheAddressReference="@{viewModel.requestDetails.userAddressReference}"
                         app:setTheAddressLat="@{viewModel.requestDetails.userAddressLat}"
                         app:setTheAddressLong="@{viewModel.requestDetails.userAddressLong}" />
 
@@ -294,7 +295,8 @@
                         app:layout_constraintBottom_toTopOf="@+id/price_txt"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/user_address_txt"
+                        app:layout_constraintStart_toEndOf="@+id/userAddressBtn"
+                        app:setTheAddressReference="@{viewModel.requestDetails.locationBAddressReference}"
                         app:setTheAddressLat="@{viewModel.requestDetails.locationBAddressLat}"
                         app:setTheAddressLong="@{viewModel.requestDetails.locationBAddressLong}" />
 
@@ -339,17 +341,17 @@
 
                     <Button
                         android:id="@+id/mark_complete_btn"
-                        android:layout_margin="4dp"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:text="@string/mark_complete"
-                        app:setEnabled="@{viewModel.requestDetails.status}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/skip_btn"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:setEnabled="@{viewModel.requestDetails.status}" />
 
                     <Button
                         android:id="@+id/mark_canceled_btn"
@@ -368,7 +370,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:text="@string/skip"
-                        app:setEnabled="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:setVisibility="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/mark_canceled_btn"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/mark_complete_btn"

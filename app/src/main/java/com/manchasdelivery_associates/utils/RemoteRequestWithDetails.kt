@@ -12,5 +12,7 @@ data class RemoteRequestWithDetails(val details: String? = null,
                                     val trackingLat: Double? = null,
                                     val trackingLong: Double? = null,
                                     val type: String? = null,
+                                    val userAddressReference: String? = null,
+                                    val locationBAddressReference: String? = null,
                                     val userAddressLat: Double? = null,
                                     val userAddressLong: Double? = null  )

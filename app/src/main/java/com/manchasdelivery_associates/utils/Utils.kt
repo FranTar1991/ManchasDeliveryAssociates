@@ -5,20 +5,14 @@ import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.ServiceInfo
 import android.location.LocationManager
-import android.os.Build
-import android.os.SystemClock
 
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.getSystemService
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.manchasdelivery_associates.R
-import com.manchasdelivery_associates.main_activity.MainActivity
-import java.lang.System.currentTimeMillis
 
 
 enum class STATUSES{
@@ -82,11 +76,11 @@ enum class STATUS(){
 fun showAlertDialog(
     title: String,
     message: String,
-    activity: Activity?,
+    context: Context?,
     hasCancelButton: Boolean = true,
     functionToExecute: (() -> Unit)?
 ): AlertDialog? {
-    val alertDialog: AlertDialog? = activity?.let {
+    val alertDialog: AlertDialog? = context?.let {
         val builder = AlertDialog.Builder(it)
         builder.apply {
             setMessage(message)
