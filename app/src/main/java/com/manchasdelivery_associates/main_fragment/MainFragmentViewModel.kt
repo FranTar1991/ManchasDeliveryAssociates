@@ -42,9 +42,13 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     val isUserLoggedIn: LiveData<Boolean>
         get() = _isUserLoggedIn
 
-    private val _requestStatusChanged = MutableLiveData<String>()
-    val requestStatusChanged: LiveData<String>
+    private val _requestStatusChanged = MutableLiveData<String?>()
+    val requestStatusChanged: LiveData<String?>
         get() = _requestStatusChanged
+
+    private val _openWhatsappChatWithNumber= MutableLiveData<String?>()
+    val openWhatsappChatWithNumber: LiveData<String?>
+        get() = _openWhatsappChatWithNumber
 
 
     init {
@@ -54,9 +58,8 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
 
     }
 
-    fun setRequestStatusChanged(value: String){
-        _requestStatusChanged.value = value
-    }
+
+
     fun setIsChecked(value: Boolean){
         _isChecked.value = value
     }
@@ -72,8 +75,11 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         }
     }
 
-     fun setServerInDb(reference: DatabaseReference){
-         val server = MDServer()
+    fun setOpenWhatsappChatWithNumber(value: String?){
+        _openWhatsappChatWithNumber.value = value
+    }
+
+     fun setServerInDb(server: MDServer, reference: DatabaseReference){
             repo.setServerInDb(server, reference, _callBack)
 
     }
@@ -93,10 +99,9 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
 
     fun changeRequestStatus(
         requestInUserNodeRef: DatabaseReference,
-        requestInServerNodeRef: DatabaseReference,
-        status: String
+        status: String?
     ) {
-        repo.changeRequestStatus(requestInUserNodeRef, requestInServerNodeRef, status, _requestStatusChanged)
+        repo.changeRequestStatus(requestInUserNodeRef, status, _requestStatusChanged)
     }
 
 

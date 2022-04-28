@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.location.LocationManager
 import android.os.Build
+import android.os.SystemClock
+
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +18,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.manchasdelivery_associates.R
 import com.manchasdelivery_associates.main_activity.MainActivity
+import java.lang.System.currentTimeMillis
 
 
 enum class STATUSES{

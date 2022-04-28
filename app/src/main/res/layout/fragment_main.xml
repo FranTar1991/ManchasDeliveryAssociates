@@ -7,6 +7,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.manchasdelivery_associates.utils.STATUS"/>
         <import type="com.google.android.gms.maps.model.LatLng"/>
         <import type="com.manchasdelivery_associates.utils.STATUSES"/>
         <variable
@@ -129,6 +130,7 @@
                 android:id="@+id/all_info_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:setTheBackground="@{viewModel.requestDetails.status}"
                 android:visibility="@{viewModel.pendingRequestInServer != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -140,6 +142,7 @@
                     android:id="@+id/constraint_layout_personal_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="16dp"
                     app:layout_constraintBottom_toTopOf="@+id/constraint_layout_details"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="spread_inside">
@@ -147,28 +150,41 @@
                     <TextView
                         android:id="@+id/name_txt"
                         style="@style/large_text"
-                        android:layout_width="0dp"
+                        tools:text="Fulano de tal"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{viewModel.requestDetails.userName}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/phone_txt"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:text="Juan Prieto" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/phone_txt"
                         style="@style/large_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
+                        android:gravity="center"
+                        android:text="@{viewModel.requestDetails.userPhone}"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/chat_img"
+                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/name_txt"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
                         tools:text="87151530" />
+
+                    <ImageView
+                        android:id="@+id/chat_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_baseline_chat_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/phone_txt"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -327,6 +343,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/mark_complete"
+                        app:setEnabled="@{viewModel.requestDetails.status}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/skip_btn"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -340,7 +357,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/cancel"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:setEnabled="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/skip_btn"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -350,9 +367,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
-                        android:enabled="false"
                         android:text="@string/skip"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:setEnabled="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/mark_canceled_btn"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/mark_complete_btn"

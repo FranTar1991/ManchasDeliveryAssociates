@@ -34,4 +34,7 @@
     <string name="want_mark_complete">Do you want to mark this as complete?</string>
     <string name="request_status_changed_to">Request status changed to: %s</string>
     <string name="want_mark_canceled">Do you want to cancel this request? (only do this if the user does not want it anymore)</string>
+    <string name="greeting_to_user_spa">Hola, soy %s de Manchas Delivery. Es en relación a su solicitud con título: %s</string>
+    <string name="greeting_to_user_eng">Hi, I am %s from Manchas Delivery. This is in regards to your request with title: %s</string>
+    <string name="want_skip">This request will be skipped because the user canceled it.</string>
 </resources>

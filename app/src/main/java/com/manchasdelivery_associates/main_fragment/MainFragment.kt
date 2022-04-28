@@ -4,11 +4,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -47,7 +49,7 @@ class MainFragment : Fragment() {
         userId?.let {
             val requestInServerNodeRef = baseReference.child(userId).child("current")
             dbReferenceForUsers = FirebaseDatabase.getInstance().reference.child("users")
-            val repo = MainFragmentRepository(requestInServerNodeRef)
+            val repo = MainFragmentRepository(requestInServerNodeRef,baseReference.child(userId))
             val application = requireNotNull(this.activity).application
             val factory = MainFragmentViewModelFactory(application, repo)
             viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
@@ -60,7 +62,8 @@ class MainFragment : Fragment() {
 
 
         binding.logInLogOutBtn.setOnClickListener {
-            viewModel?.setServerInDb(baseReference.child(userId))
+            val server = getMdServer()
+            viewModel?.setServerInDb(server,baseReference.child(userId))
         }
 
         viewModel?.callBack?.observe(viewLifecycleOwner) {
@@ -126,7 +129,7 @@ class MainFragment : Fragment() {
 
             binding.markCompleteBtn.setOnClickListener {
                 showAlertDialog(getString(R.string.alert),getString(R.string.want_mark_complete),activity){
-                    viewModel?.changeRequestStatus(requestInUserNodeRef,requestInServerNodeRef, STATUS.Finished.name)
+                    viewModel?.changeRequestStatus(requestInUserNodeRef, STATUS.Finished.name)
                 }?.show()
             }
 
@@ -136,17 +139,65 @@ class MainFragment : Fragment() {
 
             binding.markCanceledBtn.setOnClickListener {
                 showAlertDialog(getString(R.string.alert),getString(R.string.want_mark_canceled),activity){
-                    viewModel?.changeRequestStatus(requestInUserNodeRef,requestInServerNodeRef, STATUS.Canceled.name)
+                    viewModel?.changeRequestStatus(requestInUserNodeRef, STATUS.Canceled.name)
                 }?.show()
             }
+
+            binding.skipBtn.setOnClickListener {
+                showAlertDialog(getString(R.string.alert),getString(R.string.want_skip),activity){
+                    viewModel?.changeRequestStatus(requestInUserNodeRef, null)
+                }?.show()
+            }
+
+            viewModel?.openWhatsappChatWithNumber?.observe(viewLifecycleOwner){
+                it?.let{
+                    openWhatsAppWithNumber(it)
+                    viewModel?.setOpenWhatsappChatWithNumber(null)
+                }
+            }
+
+            binding.chatImg.setOnClickListener {
+                val text = getTextToSend(viewModel?.userName?.value.toString(), binding.phoneTxt.text.toString())
+                viewModel?.setOpenWhatsappChatWithNumber(text)
+            }
+
+
+
 
     }
 
         return binding.root
     }
 
+    private fun getTextToSend(userName: String, userPhone: String): String {
+       return userPhone+"?text="+
+                getString(R.string.greeting_to_user_eng,userName, viewModel?.requestDetails?.value?.title)
+    }
+
+    private fun getMdServer(): MDServer {
+      return  MDServer(
+                viewModel?.userName?.value,
+                FirebaseAuth.getInstance().currentUser?.phoneNumber)
+    }
+
     private fun stopLocationUpdateService() {
         context?.stopService(Intent(activity,LocationUpdateService::class.java))
+    }
+
+    private fun openWhatsAppWithNumber(number: String){
+        val pm: PackageManager? = activity?.packageManager
+
+        try {
+            // Raise exception if whatsapp doesn't exist
+            val info = pm?.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA)
+            val url = "https://wa.me/$number"
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Toast.makeText(activity, "Please install whatsapp app", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun callLocationUpdateService(userId: String, currentRequestId: String) {

@@ -1,9 +1,13 @@
 package com.manchasdelivery_associates.utils
 
 import android.content.Intent
+import android.graphics.Color.red
 import android.net.Uri
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.BindingAdapter
 import com.google.android.gms.maps.model.LatLng
@@ -38,4 +42,18 @@ fun EditText.setThePriceText(price: String?){
 fun TextView.set_hello_text(userName: String?){
 
     text = context.getString(R.string.hello_text,userName)
+}
+
+@BindingAdapter("setEnabled")
+fun Button.setEnabled(status: String?){
+
+    isEnabled = status != STATUS.Canceled.name || id == R.id.skip_btn
+}
+
+@BindingAdapter("setTheBackground")
+fun ConstraintLayout.setTheBackground(status: String?){
+    setBackgroundColor( if (status == STATUS.Canceled.name){
+        ContextCompat.getColor(context,R.color.red)
+    } else{ContextCompat.getColor(context,R.color.white)
+    })
 }

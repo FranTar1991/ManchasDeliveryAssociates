@@ -6,12 +6,13 @@ import com.google.firebase.database.*
 import com.manchasdelivery_associates.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.lang.System.currentTimeMillis
 
-class MainFragmentRepository(private val databaseReference: DatabaseReference) {
+class MainFragmentRepository(private val requestInServerNodeRef: DatabaseReference, private val thisServerRef: DatabaseReference) {
 
     suspend fun listenForPendingRequests(_pendingRequest: MutableLiveData<RemoteRequest>) {
         withContext(Dispatchers.IO){
-            databaseReference.addValueEventListener(object : ValueEventListener{
+            requestInServerNodeRef.addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     _pendingRequest.postValue(snapshot.getValue(RemoteRequest::class.java))
                 }
@@ -116,16 +117,19 @@ class MainFragmentRepository(private val databaseReference: DatabaseReference) {
 
     fun changeRequestStatus(
         requestInUserNodeRef: DatabaseReference,
-        requestInServerNodeRef: DatabaseReference,
-        status: String,
-        _requestCompleteCallback: MutableLiveData<String>
+        status: String?,
+        _requestCompleteCallback: MutableLiveData<String?>
     ) {
-        requestInUserNodeRef.child("status").setValue(status).addOnSuccessListener {
+        requestInServerNodeRef.get().addOnSuccessListener {
+            it?.ref?.removeValue()
+            thisServerRef.child("lastTimeUsed").setValue(currentTimeMillis())
+        }
 
-            requestInServerNodeRef.get().addOnSuccessListener {
-                it?.ref?.removeValue()
+        status?.let {
+            requestInUserNodeRef.child("status").setValue(status).addOnSuccessListener {
                 _requestCompleteCallback.postValue(status)
             }
         }
+
     }
 }
