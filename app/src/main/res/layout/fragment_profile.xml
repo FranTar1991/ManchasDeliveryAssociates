@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.manchasdelivery_associates.profile_fragment.ProfileFragmentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        tools:context=".profile_fragment.ProfileFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_Et_container"
+            android:layout_marginBottom="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/name_label"
+            app:layout_constraintBottom_toTopOf="@+id/phone_Et"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_et"
+                android:layout_width="match_parent"
+                android:text="@{viewModel.userName}"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_Et"
+            android:layout_width="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone_label"
+            app:layout_constraintBottom_toTopOf="@+id/saveProfileBtn"
+            app:layout_constraintEnd_toEndOf="@+id/name_Et_container"
+            app:layout_constraintStart_toStartOf="@+id/name_Et_container"
+            app:layout_constraintTop_toBottomOf="@+id/name_Et_container">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:text="@{viewModel.userPhoneNumber}"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/name_Et_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:src="@drawable/ic_baseline_account_circle_24" />
+
+        <Button
+            android:id="@+id/saveProfileBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/phone_Et"
+            app:layout_constraintStart_toStartOf="@+id/phone_Et"
+            app:layout_constraintTop_toBottomOf="@+id/phone_Et" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

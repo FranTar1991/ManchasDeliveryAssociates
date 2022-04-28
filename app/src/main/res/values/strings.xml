@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Manchas Delivery - Associates</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_log_in">Error: %1$d</string>
+    <string name="name_label">Full name</string>
+    <string name="phone_label">Phone number</string>
+    <string name="save">Save</string>
+    <string name="details_test">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos  sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam recusandae alias error harum maxime adipisci amet laborum. Perspiciatis  minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit  quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur  fugiat, temporibus enim commodi iusto libero magni deleniti quod quam  consequuntur! Commodi minima excepturi repudiandae velit hic maxime</string>
+    <string name="mark_complete">Finished</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_requests">There´s no pending request</string>
+    <string name="Log_in_log_out">LogIn / LogOut</string>
+    <string name="long_status_changed">Your log in status changed</string>
+    <string name="address_separator">%s / %s</string>
+    <string name="location_b_address">Address B</string>
+    <string name="user_address">Address A</string>
+    <string name="recording_location">Your location is being shared</string>
+    <string name="share_location">Share Location With Customer</string>
+    <string name="turn_on_gps">GPS is Off. Turn it on.</string>
+    <string name="stopping_service">Stopping service</string>
+    <string name="skip">Skip</string>
+    <string name="price">Price</string>
+    <string name="to_be_defined">To be defined</string>
+    <string name="preference_file_key">preference_file_key</string>
+    <string name="user_name">user name</string>
+    <string name="something_wrong">Enter the required info</string>
+    <string name="hello_text">Hi, %s</string>
+    <string name="log_in">Log in</string>
+    <string name="log_out">Log out</string>
+    <string name="ok">Ok</string>
+    <string name="cacenlIt">Cancel</string>
+    <string name="alert">Alert</string>
+    <string name="want_mark_complete">Do you want to mark this as complete?</string>
+    <string name="request_status_changed_to">Request status changed to: %s</string>
+    <string name="want_mark_canceled">Do you want to cancel this request? (only do this if the user does not want it anymore)</string>
+</resources>
