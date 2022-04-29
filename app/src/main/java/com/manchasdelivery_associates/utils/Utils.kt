@@ -12,11 +12,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.FirebaseDatabase
 import com.manchasdelivery_associates.R
 
 
 enum class STATUSES{
-    success, error, loading
+    success, error, loading, idle
 }
 
 fun showSnackbar(view: View, text: String){
@@ -45,6 +46,12 @@ fun saveStringToSharedPreferences(key: String, value: String, context: Context
         putString(key, value)
         apply()
     }
+}
+
+fun sendRegistrationToServer(token: String?, serverId: String) {
+    val baseReference = FirebaseDatabase.getInstance().reference
+    val reference = baseReference.child("servers").child(serverId).child("FCMToken")
+    reference.setValue(token)
 }
 
 fun cancelNotification(context: Context?) {

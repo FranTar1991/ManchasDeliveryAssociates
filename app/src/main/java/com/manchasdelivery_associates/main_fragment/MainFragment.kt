@@ -66,9 +66,10 @@ class MainFragment : Fragment() {
             viewModel?.setServerInDb(server,baseReference.child(userId))
         }
 
-        viewModel?.callBack?.observe(viewLifecycleOwner) {
+        viewModel?.callBackForSignInRequest?.observe(viewLifecycleOwner) {
             if (it == STATUSES.success) {
                 showSnackbar(binding.root, getString(R.string.long_status_changed))
+                viewModel?.setCallBackForSignInRequest(STATUSES.idle)
             }
         }
 
@@ -134,7 +135,11 @@ class MainFragment : Fragment() {
             }
 
             viewModel?.requestStatusChanged?.observe(viewLifecycleOwner){
-                showSnackbar(binding.root,getString(R.string.request_status_changed_to, it))
+                it?.let {
+                    showSnackbar(binding.root,getString(R.string.request_status_changed_to, it))
+                    viewModel?.setRequestStatusChanged(null)
+                }
+
             }
 
             binding.markCanceledBtn.setOnClickListener {

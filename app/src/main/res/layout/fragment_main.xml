@@ -81,7 +81,7 @@
                 <ProgressBar
                     style="?android:attr/progressBarStyle"
                     android:id="@+id/status_txt"
-                    android:visibility="@{viewModel.callBack == STATUSES.loading ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.callBackForSignInRequest == STATUSES.loading ? View.VISIBLE : View.GONE}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"

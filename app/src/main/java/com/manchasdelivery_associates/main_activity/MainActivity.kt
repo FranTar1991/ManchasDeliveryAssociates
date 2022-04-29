@@ -3,6 +3,7 @@ package com.manchasdelivery_associates.main_activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -15,15 +16,18 @@ import androidx.navigation.fragment.NavHostFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.manchasdelivery.main_activity.MainActivityViewModel
 import com.manchasdelivery.main_activity.MainActivityViewModelFactory
 import com.manchasdelivery_associates.R
 import com.manchasdelivery_associates.main_fragment.MainFragmentDirections
 import com.manchasdelivery_associates.utils.createSignInIntent
+import com.manchasdelivery_associates.utils.sendRegistrationToServer
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainActivityViewModel
@@ -63,6 +67,12 @@ class MainActivity : AppCompatActivity() {
                    .navigate(MainFragmentDirections.actionMainFragmentToProfileFragment())
             }
         })
+
+        viewModel.registrationToken.observe(this){ token->
+            FirebaseAuth.getInstance().currentUser?.uid?.let {
+                sendRegistrationToServer(token, it)
+            }
+        }
     }
 
 
@@ -91,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         val response = result.idpResponse
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             viewModel.setNavigateToProfileFragment(true)
+            getNewToken()
             // ...
         } else {
             // Sign in failed. If response is null the user canceled the
@@ -105,5 +116,21 @@ class MainActivity : AppCompatActivity() {
             // ...
         }
         viewModel.setSplashScreenLoadingStatus(false)
+    }
+
+    private fun getNewToken(){
+        // Get token
+        // [START log_reg_token]
+        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            viewModel.setRegistrationToken(token)
+
+        })
+        // [END log_reg_token]
     }
 }

@@ -30,9 +30,9 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     val requestDetails: LiveData<RemoteRequestWithDetails?>
         get() = _requestDetails
 
-    private val _callBack = MutableLiveData<STATUSES>()
-    val callBack: LiveData<STATUSES>
-    get() = _callBack
+    private val _callBackForSignInRequest = MutableLiveData<STATUSES>()
+    val callBackForSignInRequest: LiveData<STATUSES>
+    get() = _callBackForSignInRequest
 
     private val _isChecked = MutableLiveData<Boolean>()
     val isChecked: LiveData<Boolean>
@@ -58,7 +58,13 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
 
     }
 
+    fun setCallBackForSignInRequest(value: STATUSES){
+        _callBackForSignInRequest.value = value
+    }
 
+    fun setRequestStatusChanged(value: String?){
+        _requestStatusChanged.value = value
+    }
 
     fun setIsChecked(value: Boolean){
         _isChecked.value = value
@@ -80,7 +86,7 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     }
 
      fun setServerInDb(server: MDServer, reference: DatabaseReference){
-            repo.setServerInDb(server, reference, _callBack)
+            repo.setServerInDb(server, reference, _callBackForSignInRequest)
 
     }
 
