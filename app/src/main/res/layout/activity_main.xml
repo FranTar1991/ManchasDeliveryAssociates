@@ -1,21 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main_activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.manchasdelivery_associates.utils.GeneralStatus"/>
+        <variable
+            name="viewModel"
+            type="com.manchasdelivery.main_activity.MainActivityViewModel" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".main_activity.MainActivity">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+
+        <TextView
+            android:id="@+id/not_connected_txt"
+            style="@style/type_txt_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{viewModel.networkCheck == GeneralStatus.success ? @color/green : @color/red }"
+            android:fontFamily="@font/archivo"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="@{viewModel.networkCheck == GeneralStatus.error || viewModel.networkCheck == GeneralStatus.loading  ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/nav_host_fragment"
+            app:setTheTextForInternetCheck="@{viewModel.networkCheck}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

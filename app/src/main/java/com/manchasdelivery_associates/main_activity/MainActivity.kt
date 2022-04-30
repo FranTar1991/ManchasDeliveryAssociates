@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -25,6 +26,7 @@ import com.google.firebase.messaging.ktx.messaging
 import com.manchasdelivery.main_activity.MainActivityViewModel
 import com.manchasdelivery.main_activity.MainActivityViewModelFactory
 import com.manchasdelivery_associates.R
+import com.manchasdelivery_associates.databinding.ActivityMainBinding
 import com.manchasdelivery_associates.main_fragment.MainFragmentDirections
 import com.manchasdelivery_associates.utils.createSignInIntent
 import com.manchasdelivery_associates.utils.sendRegistrationToServer
@@ -42,12 +44,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        setContentView(R.layout.activity_main)
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         database = Firebase.database.reference
-        val factory = MainActivityViewModelFactory(firebaseUser, database)
+        val factory = MainActivityViewModelFactory(firebaseUser, application)
         viewModel = ViewModelProvider(this, factory)[MainActivityViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
+
         addInitialDataListener(viewModel)
+
 
         if (firebaseUser == null){
             createSignInIntent(signInLauncher)

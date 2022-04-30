@@ -20,6 +20,10 @@ enum class STATUSES{
     success, error, loading, idle
 }
 
+enum class GeneralStatus{
+    loading, success, error
+}
+
 fun showSnackbar(view: View, text: String){
     Snackbar.make(view,text, Snackbar.LENGTH_SHORT).show()
 }

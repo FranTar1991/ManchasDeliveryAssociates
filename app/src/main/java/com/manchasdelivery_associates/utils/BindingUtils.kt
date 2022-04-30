@@ -65,3 +65,16 @@ fun Button.setVisibility(status: String?){
 fun ConstraintLayout.setIfVisible(request: RemoteRequest?, details: RemoteRequestWithDetails?){
         isVisible= request != null && details?.status != STATUS.Canceled.name
 }
+
+@BindingAdapter("setTheTextForInternetCheck")
+fun TextView.setTheTextForInternetCheck(status: GeneralStatus?){
+    status?.let {
+        text = when(status){
+            GeneralStatus.loading -> context.getString(R.string.checking_internet_connection)
+            GeneralStatus.error -> context.getString(R.string.not_connected)
+            GeneralStatus.success -> context.getString(R.string.back_online)
+            else -> context.getString(R.string.unknown_state)
+        }
+    }
+
+}

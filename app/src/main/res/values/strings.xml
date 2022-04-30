@@ -39,4 +39,8 @@
     <string name="want_skip">This request will be skipped because the user canceled it.</string>
     <string name="want_launch_map">Want to launch google maps?</string>
     <string name="is_switch_on">is switch on</string>
+    <string name="checking_internet_connection">Checking Your Internet…</string>
+    <string name="not_connected">You´re Offline :(</string>
+    <string name="back_online">You´re Back Online :D</string>
+    <string name="unknown_state">Unkwnown State</string>
 </resources>
