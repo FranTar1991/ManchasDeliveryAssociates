@@ -61,10 +61,7 @@ fun Button.setVisibility(status: String?){
 
 }
 
-@BindingAdapter("setTheBackground")
-fun ConstraintLayout.setTheBackground(status: String?){
-    setBackgroundColor( if (status == STATUS.Canceled.name){
-        ContextCompat.getColor(context,R.color.red)
-    } else{ContextCompat.getColor(context,R.color.white)
-    })
+@BindingAdapter("setIfVisible","setIfVisibleByDetails")
+fun ConstraintLayout.setIfVisible(request: RemoteRequest?, details: RemoteRequestWithDetails?){
+        isVisible= request != null && details?.status != STATUS.Canceled.name
 }

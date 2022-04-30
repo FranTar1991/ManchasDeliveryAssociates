@@ -62,7 +62,9 @@ class LocationUpdateService(): Service() {
     private fun startLocationUpdates() {
         fusedLocationProviderClient?.requestLocationUpdates(locationRequest,
             locationCallback,
-            Looper.getMainLooper())
+            Looper.getMainLooper())?.addOnSuccessListener {
+                Toast.makeText(applicationContext,"Location service started",Toast.LENGTH_SHORT).show()
+        }
     }
 
 

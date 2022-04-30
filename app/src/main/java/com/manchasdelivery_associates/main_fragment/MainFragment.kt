@@ -24,10 +24,12 @@ import com.manchasdelivery_associates.databinding.FragmentMainBinding
 import com.manchasdelivery_associates.utils.*
 
 class MainFragment : Fragment() {
+
     private lateinit var requestInUserNodeRef: DatabaseReference
     private lateinit var currentRequestId: String
     private lateinit var currentOwnerOfRequestId: String
     private var viewModel: MainFragmentViewModel? = null
+    private lateinit var binding: FragmentMainBinding
 
     private lateinit var dbReferenceForUsers: DatabaseReference
     @SuppressLint("MissingPermission")
@@ -41,7 +43,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         val baseReference = FirebaseDatabase.getInstance().reference.child("servers")
 
@@ -60,7 +62,6 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-
         binding.logInLogOutBtn.setOnClickListener {
             val server = getMdServer()
             viewModel?.setServerInDb(server,baseReference.child(userId))
@@ -74,17 +75,12 @@ class MainFragment : Fragment() {
         }
 
         binding.locationSw.setOnCheckedChangeListener { compoundButton, b ->
-            viewModel?.setIsChecked(b)
-            if (checkGps(context) && b) {
+            if (checkGps(context)  && b){
                 getLocationPermission()
-            } else if (!checkGps(context)) {
+            }else if (!checkGps(context)){
                 showSnackbar(binding.root, getString(R.string.turn_on_gps))
-                viewModel?.setIsChecked(false)
-            }
-        }
-
-        viewModel?.isChecked?.observe(viewLifecycleOwner) {
-            if (it == false) {
+                binding.locationSw.isChecked = false
+            }else{
                 stopLocationUpdateService()
             }
         }
@@ -101,7 +97,7 @@ class MainFragment : Fragment() {
         }
 
         viewModel?.isLocationPermissionGranted?.observe(viewLifecycleOwner, Observer { isGranted ->
-            if (isGranted) {
+            if (isGranted && binding.locationSw.isChecked) {
                 callLocationUpdateService(currentOwnerOfRequestId, currentRequestId)
             } else {
                 // Explain to the user that the feature is unavailable because the
@@ -112,6 +108,7 @@ class MainFragment : Fragment() {
             }
 
         })
+
 
             viewModel?.navigateToProfileFragment?.observe(viewLifecycleOwner){
                 if (it){
@@ -137,6 +134,7 @@ class MainFragment : Fragment() {
             viewModel?.requestStatusChanged?.observe(viewLifecycleOwner){
                 it?.let {
                     showSnackbar(binding.root,getString(R.string.request_status_changed_to, it))
+                    stopLocationUpdateService()
                     viewModel?.setRequestStatusChanged(null)
                 }
 
@@ -174,6 +172,11 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopLocationUpdateService()
+    }
+
     private fun getTextToSend(userName: String, userPhone: String): String {
        return userPhone+"?text="+
                 getString(R.string.greeting_to_user_eng,userName, viewModel?.requestDetails?.value?.title)
@@ -186,6 +189,7 @@ class MainFragment : Fragment() {
     }
 
     private fun stopLocationUpdateService() {
+        binding.locationSw.isChecked = false
         context?.stopService(Intent(activity,LocationUpdateService::class.java))
     }
 
@@ -206,7 +210,7 @@ class MainFragment : Fragment() {
     }
 
     private fun callLocationUpdateService(userId: String, currentRequestId: String) {
-
+        binding.locationSw.isChecked = true
         context?.let {
             val intent = Intent(it, LocationUpdateService::class.java)
             intent.putExtra("userId", userId)

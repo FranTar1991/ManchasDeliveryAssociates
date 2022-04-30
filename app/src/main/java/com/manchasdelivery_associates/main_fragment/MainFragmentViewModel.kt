@@ -1,6 +1,7 @@
 package com.manchasdelivery_associates.main_fragment
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import com.google.firebase.database.DatabaseReference
 import com.manchasdelivery_associates.R
@@ -34,9 +35,6 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     val callBackForSignInRequest: LiveData<STATUSES>
     get() = _callBackForSignInRequest
 
-    private val _isChecked = MutableLiveData<Boolean>()
-    val isChecked: LiveData<Boolean>
-    get() = _isChecked
 
     private val _isUserLoggedIn = MutableLiveData<Boolean>()
     val isUserLoggedIn: LiveData<Boolean>
@@ -66,14 +64,12 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         _requestStatusChanged.value = value
     }
 
-    fun setIsChecked(value: Boolean){
-        _isChecked.value = value
-    }
     private fun listenForPendingRequests() {
         viewModelScope.launch {
             repo.listenForPendingRequests(_pendingRequestInServer)
         }
     }
+
 
      fun listenForPendingRequestDetails(reference: DatabaseReference, requestId: String){
         viewModelScope.launch {

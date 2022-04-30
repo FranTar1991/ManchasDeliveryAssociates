@@ -130,8 +130,9 @@
                 android:id="@+id/all_info_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:setTheBackground="@{viewModel.requestDetails.status}"
-                android:visibility="@{viewModel.pendingRequestInServer != null ? View.VISIBLE : View.GONE}"
+                android:clickable="false"
+                app:setIfVisible="@{viewModel.pendingRequestInServer}"
+                app:setIfVisibleByDetails="@{viewModel.requestDetails}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -243,7 +244,7 @@
                     android:layout_width="match_parent"
                     android:padding="16dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@+id/constraint_layout_buttons"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraint_layout_details">
@@ -253,7 +254,6 @@
                         style="@style/large_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:checked="@{viewModel.isChecked}"
                         android:padding="16dp"
                         android:text="@string/share_location"
                         app:layout_constraintBottom_toTopOf="@+id/userAddressBtn"
@@ -330,56 +330,55 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraint_layout_buttons"
-                    android:layout_width="match_parent"
-                    android:padding="16dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraint_layout_address">
-
-                    <Button
-                        android:id="@+id/mark_complete_btn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:text="@string/mark_complete"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/skip_btn"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:setEnabled="@{viewModel.requestDetails.status}" />
-
-                    <Button
-                        android:id="@+id/mark_canceled_btn"
-                        android:layout_margin="4dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cancel"
-                        app:setEnabled="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/skip_btn"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <Button
-                        android:id="@+id/skip_btn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:text="@string/skip"
-                        app:setVisibility="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/mark_canceled_btn"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/mark_complete_btn"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_buttons"
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:visibility="@{viewModel.pendingRequestInServer != null ? View.VISIBLE : View.GONE}"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/all_info_view">
+
+                <Button
+                    android:id="@+id/mark_complete_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/mark_complete"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/skip_btn"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:setEnabled="@{viewModel.requestDetails.status}" />
+
+                <Button
+                    android:id="@+id/mark_canceled_btn"
+                    android:layout_margin="4dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    app:setEnabled="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/skip_btn"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/skip_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="@string/skip"
+                    app:setVisibility="@{viewModel.requestDetails.status}"                        app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/mark_canceled_btn"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/mark_complete_btn"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

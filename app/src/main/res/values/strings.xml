@@ -38,4 +38,5 @@
     <string name="greeting_to_user_eng">Hi, I am %s from Manchas Delivery. This is in regards to your request with title: %s</string>
     <string name="want_skip">This request will be skipped because the user canceled it.</string>
     <string name="want_launch_map">Want to launch google maps?</string>
+    <string name="is_switch_on">is switch on</string>
 </resources>

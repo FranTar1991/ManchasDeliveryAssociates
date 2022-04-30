@@ -48,6 +48,27 @@ fun saveStringToSharedPreferences(key: String, value: String, context: Context
     }
 }
 
+fun saveBooleanToSharedPreferences(key: String, value: Boolean, context: Context?) {
+    context?.let {
+        val sharedPref = context.getSharedPreferences(
+            context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putBoolean(key, value)
+            apply()
+        }
+    }
+
+}
+fun getBooleanFromSharedPreferences(context: Context?, key: String, defaultValue: Boolean): Boolean {
+    var value = false
+    context?.let {
+        val sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        value = sharedPref?.getBoolean(key,defaultValue) == true
+    }
+
+    return value
+}
+
 fun sendRegistrationToServer(token: String?, serverId: String) {
     val baseReference = FirebaseDatabase.getInstance().reference
     val reference = baseReference.child("servers").child(serverId).child("FCMToken")
