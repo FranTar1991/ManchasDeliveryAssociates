@@ -75,11 +75,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.registrationToken.observe(this){ token->
-            FirebaseAuth.getInstance().currentUser?.uid?.let {
-                sendRegistrationToServer(token, it)
-            }
-        }
+
     }
 
 
@@ -108,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         val response = result.idpResponse
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             viewModel.setNavigateToProfileFragment(true)
-            getNewToken()
+
             // ...
         } else {
             // Sign in failed. If response is null the user canceled the
@@ -125,19 +121,5 @@ class MainActivity : AppCompatActivity() {
         viewModel.setSplashScreenLoadingStatus(false)
     }
 
-    private fun getNewToken(){
-        // Get token
-        // [START log_reg_token]
-        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
 
-            // Get new FCM registration token
-            val token = task.result
-            viewModel.setRegistrationToken(token)
-
-        })
-        // [END log_reg_token]
-    }
 }

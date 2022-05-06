@@ -11,13 +11,16 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.manchasdelivery_associates.R
 
 
 enum class STATUSES{
-    success, error, loading, idle
+  loading, idle,loggedIn, loggedOut
 }
 
 enum class GeneralStatus{
@@ -63,6 +66,9 @@ fun saveBooleanToSharedPreferences(key: String, value: Boolean, context: Context
     }
 
 }
+
+
+
 fun getBooleanFromSharedPreferences(context: Context?, key: String, defaultValue: Boolean): Boolean {
     var value = false
     context?.let {

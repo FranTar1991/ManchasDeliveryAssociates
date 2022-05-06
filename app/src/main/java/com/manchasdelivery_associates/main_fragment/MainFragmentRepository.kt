@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.System.currentTimeMillis
 
-class MainFragmentRepository(private val requestInServerNodeRef: DatabaseReference, private val thisServerRef: DatabaseReference) {
+class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
+                             private val requestInServerNodeRef: DatabaseReference,
+                             private val thisServerRef: DatabaseReference) {
 
     suspend fun listenForPendingRequests(_pendingRequest: MutableLiveData<RemoteRequest>) {
         withContext(Dispatchers.IO){
@@ -25,18 +27,21 @@ class MainFragmentRepository(private val requestInServerNodeRef: DatabaseReferen
         }
     }
 
-     fun setServerInDb(server: MDServer, reference: DatabaseReference, callback: MutableLiveData<STATUSES>, ) {
-            callback.postValue(STATUSES.loading)
+     fun setServerInDb(server: MDServer, reference: DatabaseReference,
+                       callback: MutableLiveData<STATUSES>, ) {
+
+         callback.postValue(STATUSES.loading)
 
              reference.get().addOnSuccessListener { snap->
                  if (snap.value != null){
-                     snap.ref.removeValue()
+                     snap.ref.removeValue().addOnSuccessListener {
+                         callback.postValue(STATUSES.loggedOut)
+                     }
                  } else {
                      reference.setValue(server).addOnSuccessListener {
-                         callback.postValue(STATUSES.success)
+                         callback.postValue(STATUSES.loggedIn)
                      }
                  }
-                 callback.postValue(STATUSES.success)
              }
 
     }
@@ -115,10 +120,15 @@ class MainFragmentRepository(private val requestInServerNodeRef: DatabaseReferen
         longReference.setValue(latLng.longitude)
     }
 
+    fun updatePriceInUserNodeRef( requestInUserNodeRef: DatabaseReference, price: String?, _priceUpdateCallback: MutableLiveData<String?>){
+        price?.let {
+            requestInUserNodeRef.child("price").setValue(price).addOnSuccessListener {
+                _priceUpdateCallback.postValue(price)
+            }
+        }
+    }
     fun changeRequestStatus(
-        requestInUserNodeRef: DatabaseReference,
-        status: String?,
-        _requestCompleteCallback: MutableLiveData<String?>
+        requestInUserNodeRef: DatabaseReference, status: String?, _requestCompleteCallback: MutableLiveData<String?>
     ) {
         requestInServerNodeRef.get().addOnSuccessListener {
             it?.ref?.removeValue()
@@ -130,6 +140,13 @@ class MainFragmentRepository(private val requestInServerNodeRef: DatabaseReferen
                 _requestCompleteCallback.postValue(status)
             }
         }
+
+        if (status == STATUS.Finished.name){
+            requestInUserNodeRef.get().addOnSuccessListener {
+                finishedRequestsRef.push().setValue(it.getValue(RemoteRequestWithDetails::class.java))
+            }
+        }
+
 
     }
 }

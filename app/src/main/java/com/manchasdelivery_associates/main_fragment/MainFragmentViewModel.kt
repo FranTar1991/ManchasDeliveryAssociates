@@ -3,7 +3,10 @@ package com.manchasdelivery_associates.main_fragment
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.manchasdelivery_associates.R
 import com.manchasdelivery_associates.utils.*
 import kotlinx.coroutines.launch
@@ -44,10 +47,17 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     val requestStatusChanged: LiveData<String?>
         get() = _requestStatusChanged
 
+    private val _priceChanged = MutableLiveData<String?>()
+    val priceChanged: LiveData<String?>
+        get() = _priceChanged
+
     private val _openWhatsappChatWithNumber= MutableLiveData<String?>()
     val openWhatsappChatWithNumber: LiveData<String?>
         get() = _openWhatsappChatWithNumber
 
+    private val _registrationToken = MutableLiveData<String?>()
+    val registrationToken: LiveData<String?>
+        get() = _registrationToken
 
     init {
         listenForPendingRequests()
@@ -106,5 +116,24 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         repo.changeRequestStatus(requestInUserNodeRef, status, _requestStatusChanged)
     }
 
+    fun updatePriceInUserNode(price: String, requestInUserNodeRef: DatabaseReference){
+        repo.updatePriceInUserNodeRef(requestInUserNodeRef, price, _priceChanged)
+    }
+
+     fun getNewToken(){
+        // Get token
+        // [START log_reg_token]
+        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            _registrationToken.value = token
+
+        })
+        // [END log_reg_token]
+    }
 
 }

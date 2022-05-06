@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -30,6 +31,7 @@ class MainFragment : Fragment() {
     private lateinit var currentOwnerOfRequestId: String
     private var viewModel: MainFragmentViewModel? = null
     private lateinit var binding: FragmentMainBinding
+    private lateinit var currentRequestWithDetails: RemoteRequestWithDetails
 
     private lateinit var dbReferenceForUsers: DatabaseReference
     @SuppressLint("MissingPermission")
@@ -51,7 +53,7 @@ class MainFragment : Fragment() {
         userId?.let {
             val requestInServerNodeRef = baseReference.child(userId).child("current")
             dbReferenceForUsers = FirebaseDatabase.getInstance().reference.child("users")
-            val repo = MainFragmentRepository(requestInServerNodeRef,baseReference.child(userId))
+            val repo = MainFragmentRepository( FirebaseDatabase.getInstance().reference.child("data").child("finished_requests"), requestInServerNodeRef,baseReference.child(userId))
             val application = requireNotNull(this.activity).application
             val factory = MainFragmentViewModelFactory(application, repo)
             viewModel = ViewModelProvider(this, factory)[MainFragmentViewModel::class.java]
@@ -68,11 +70,25 @@ class MainFragment : Fragment() {
         }
 
         viewModel?.callBackForSignInRequest?.observe(viewLifecycleOwner) {
-            if (it == STATUSES.success) {
-                showSnackbar(binding.root, getString(R.string.long_status_changed))
+
+            if (it == STATUSES.loggedIn || it == STATUSES.loggedOut){
+                showSnackbar(binding.root, getString(R.string.long_status_changed, it))
+                viewModel?.setCallBackForSignInRequest(STATUSES.idle)
+
+                if (it == STATUSES.loggedIn){
+                    viewModel?.getNewToken()
+                }
+
                 viewModel?.setCallBackForSignInRequest(STATUSES.idle)
             }
+
+
         }
+        viewModel?.registrationToken?.observe(viewLifecycleOwner){ token->
+            FirebaseAuth.getInstance().currentUser?.uid?.let {
+                sendRegistrationToServer(token, it)
+            }
+            }
 
         binding.locationSw.setOnCheckedChangeListener { compoundButton, b ->
             if (checkGps(context)  && b){
@@ -126,9 +142,18 @@ class MainFragment : Fragment() {
             viewModel?.checkServerStatusInDb(baseReference.child(userId))
 
             binding.markCompleteBtn.setOnClickListener {
-                showAlertDialog(getString(R.string.alert),getString(R.string.want_mark_complete),activity){
-                    viewModel?.changeRequestStatus(requestInUserNodeRef, STATUS.Finished.name)
-                }?.show()
+
+                if(currentRequestWithDetails.price == getString(R.string.to_be_defined)){
+                    showAlertDialog(getString(R.string.alert), getString(R.string.add_price),activity,hasCancelButton = false){
+                        binding.priceTxt.requestFocus()
+                    }?.show()
+                }else {
+                    showAlertDialog(getString(R.string.alert),getString(R.string.want_mark_complete),activity){
+                        viewModel?.changeRequestStatus(requestInUserNodeRef, STATUS.Finished.name)
+                    }?.show()
+                }
+
+
             }
 
             viewModel?.requestStatusChanged?.observe(viewLifecycleOwner){
@@ -138,6 +163,10 @@ class MainFragment : Fragment() {
                     viewModel?.setRequestStatusChanged(null)
                 }
 
+            }
+            binding.updatePriceBtn.setOnClickListener {
+                val newPrice = "C$"+binding.priceTxt.text.toString()
+                viewModel?.updatePriceInUserNode(newPrice,requestInUserNodeRef)
             }
 
             binding.markCanceledBtn.setOnClickListener {
@@ -156,6 +185,16 @@ class MainFragment : Fragment() {
                 it?.let{
                     openWhatsAppWithNumber(it)
                     viewModel?.setOpenWhatsappChatWithNumber(null)
+                }
+            }
+
+            viewModel?.priceChanged?.observe(viewLifecycleOwner){
+                showSnackbar(binding.root.rootView,getString(R.string.price_changed,it))
+            }
+
+            viewModel?.requestDetails?.observe(viewLifecycleOwner){
+                it?.let {
+                    currentRequestWithDetails = it
                 }
             }
 
@@ -183,9 +222,8 @@ class MainFragment : Fragment() {
     }
 
     private fun getMdServer(): MDServer {
-      return  MDServer(
-                viewModel?.userName?.value,
-                FirebaseAuth.getInstance().currentUser?.phoneNumber)
+      return  MDServer(associate = viewModel?.userName?.value,
+               phoneNumber = FirebaseAuth.getInstance().currentUser?.phoneNumber)
     }
 
     private fun stopLocationUpdateService() {

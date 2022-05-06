@@ -30,10 +30,6 @@ class MainActivityViewModel(private val firebaseUser: FirebaseUser?,
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _registrationToken = MutableLiveData<String?>()
-    val registrationToken: LiveData<String?>
-        get() = _registrationToken
-
     private val _navigateToProfileFragment = MutableLiveData<Boolean>()
     val navigateToProfileFragment: LiveData<Boolean>
     get() = _navigateToProfileFragment
@@ -86,8 +82,6 @@ class MainActivityViewModel(private val firebaseUser: FirebaseUser?,
         _isLoading.value = status
     }
 
-    fun setRegistrationToken(token: String?) {
-        _registrationToken.value = token
-    }
+
 
 }

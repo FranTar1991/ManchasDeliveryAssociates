@@ -164,6 +164,7 @@
                     <EditText
                         android:id="@+id/phone_txt"
                         style="@style/large_text"
+                        android:textSize="14sp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -300,9 +301,8 @@
                         app:setTheAddressLat="@{viewModel.requestDetails.locationBAddressLat}"
                         app:setTheAddressLong="@{viewModel.requestDetails.locationBAddressLong}" />
 
-                    <TextView
-                        android:id="@+id/textView"
-                        style="@style/large_text"
+                    <Button
+                        android:id="@+id/update_price_btn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -326,7 +326,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/textView" />
+                        app:layout_constraintStart_toEndOf="@+id/update_price_btn" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
