@@ -43,4 +43,6 @@
     <string name="unknown_state">Unknown State</string>
     <string name="add_price">Antes de cambiar el estatus de la solicitud tienes que agregarle un precio.</string>
     <string name="price_changed">Precio actualizado a: %s</string>
+    <string name="default_notification_channel_id">ManMan Asoc.</string>
+    <string name="fcm_message">Solicitud pendiente</string>
 </resources>
