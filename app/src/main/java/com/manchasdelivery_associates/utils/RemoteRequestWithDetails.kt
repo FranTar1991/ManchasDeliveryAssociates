@@ -1,7 +1,7 @@
 package com.manchasdelivery_associates.utils
 
 data class RemoteRequestWithDetails(val details: String? = null,
-                                    val id: String? = null,
+                                    var id: String? = null,
                                     var userName: String? = null,
 
                                     var userPhone: String? = null,

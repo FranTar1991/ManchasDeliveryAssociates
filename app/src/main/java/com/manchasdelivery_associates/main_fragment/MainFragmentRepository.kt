@@ -143,7 +143,11 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
 
         if (status == STATUS.Finished.name){
             requestInUserNodeRef.get().addOnSuccessListener {
-                finishedRequestsRef.push().setValue(it.getValue(RemoteRequestWithDetails::class.java))
+                val requestKey = it.key
+                val requestToSave = it.getValue(RemoteRequestWithDetails::class.java)
+                requestToSave?.id = requestKey
+
+                finishedRequestsRef.push().setValue(requestToSave)
             }
         }
 
