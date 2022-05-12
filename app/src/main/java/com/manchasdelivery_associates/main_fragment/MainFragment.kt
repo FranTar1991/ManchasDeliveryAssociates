@@ -143,7 +143,7 @@ class MainFragment : Fragment() {
 
             binding.markCompleteBtn.setOnClickListener {
 
-                if(currentRequestWithDetails.price == getString(R.string.to_be_defined)){
+                if(currentRequestWithDetails.price == -1.0){
                     showAlertDialog(getString(R.string.alert), getString(R.string.add_price),activity,hasCancelButton = false){
                         binding.priceTxt.requestFocus()
                     }?.show()

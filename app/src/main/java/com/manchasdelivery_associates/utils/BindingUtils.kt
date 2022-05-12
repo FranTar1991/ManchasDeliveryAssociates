@@ -33,13 +33,13 @@ fun TextView.setTheAddress(addressLat: Double?, addressLong: Double?, addressRef
 }
 
 @BindingAdapter("setThePriceText")
-fun EditText.setThePriceText(price: String?){
-    setText(if (price == context.getString(R.string.to_be_defined)){
+fun EditText.setThePriceText(price: Double?){
+    setText(if (price == -1.00){
         isEnabled = true
         ""
     }else{
         isEnabled = false
-        price
+        context?.getString(R.string.show_price, price.toString())
     })
 }
 

@@ -11,7 +11,7 @@ data class RemoteRequestWithDetails(val details: String? = null,
                                     val trackingLat: Double? = null,
                                     val trackingLong: Double? = null,
 
-                                    val price: String? = null,
+                                    val price: Double? = null,
                                     var agentName: String? = null,
                                     var agentPhone: String? = null,
 

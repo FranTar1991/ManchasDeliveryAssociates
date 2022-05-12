@@ -321,6 +321,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="16dp"
+                        android:inputType="numberDecimal"
                         android:hint="@string/to_be_defined"
                         app:setThePriceText='@{viewModel.requestDetails.price}'
                         app:layout_constraintBottom_toBottomOf="parent"
