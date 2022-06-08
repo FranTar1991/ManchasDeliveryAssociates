@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.location.LocationManager
+import android.provider.Settings
 
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
@@ -134,9 +135,14 @@ fun showAlertDialog(
                     dialog.cancel()
                 }
             }
-
+        setCancelable(false)
         }
         builder.create()
     }
     return alertDialog
+}
+
+fun callGPSPageOnSettings(context: Context?){
+    val intent1 =  Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    context?. startActivity(intent1);
 }

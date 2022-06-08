@@ -94,7 +94,9 @@ class MainFragment : Fragment() {
             if (checkGps(context)  && b){
                 getLocationPermission()
             }else if (!checkGps(context)){
-                showSnackbar(binding.root, getString(R.string.turn_on_gps))
+                showAlertDialog( getString(R.string.alert), getString(R.string.turn_on_gps),context,false){
+                    callGPSPageOnSettings(context)
+                }?.show()
                 binding.locationSw.isChecked = false
             }else{
                 stopLocationUpdateService()
@@ -195,6 +197,13 @@ class MainFragment : Fragment() {
             viewModel?.requestDetails?.observe(viewLifecycleOwner){
                 it?.let {
                     currentRequestWithDetails = it
+
+                    binding.locationSw.apply{
+                        if (!isChecked){
+                            isChecked = true
+                            isEnabled = false
+                        }
+                    }
                 }
             }
 
@@ -209,6 +218,29 @@ class MainFragment : Fragment() {
     }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        try {
+            if (!checkGps(context) && currentRequestWithDetails.details != null) {
+                showAlertDialog(
+                    getString(R.string.alert),
+                    getString(R.string.turn_on_gps),
+                    context,
+                    false
+                ) {
+                    binding.locationSw.isChecked = false
+                    callGPSPageOnSettings(context)
+                }?.show()
+            } else if (checkGps(context) && currentRequestWithDetails.details != null && !binding.locationSw.isChecked){
+                binding.locationSw.isChecked = true
+            }
+        }catch (e: UninitializedPropertyAccessException){
+
+        }
+
     }
 
     override fun onDestroy() {

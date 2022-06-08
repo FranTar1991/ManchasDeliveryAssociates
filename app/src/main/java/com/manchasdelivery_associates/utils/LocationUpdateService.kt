@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Intent
 import android.location.Location
 import android.os.Binder
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -63,7 +64,7 @@ class LocationUpdateService(): Service() {
         fusedLocationProviderClient?.requestLocationUpdates(locationRequest,
             locationCallback,
             Looper.getMainLooper())?.addOnSuccessListener {
-                Toast.makeText(applicationContext,"Location service started",Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext,"Location service started",Toast.LENGTH_SHORT).show()
         }
     }
 
