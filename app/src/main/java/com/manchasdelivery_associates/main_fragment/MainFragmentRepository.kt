@@ -46,11 +46,16 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
 
     }
 
-    fun checkServerStatusInDb(reference: DatabaseReference, isLogedInCallback: MutableLiveData<Boolean>){
+    fun checkServerStatusInDb(
+        reference: DatabaseReference,
+        isLogedInCallback: MutableLiveData<Boolean>,
+        callBackForSignInRequest: MutableLiveData<STATUSES>
+    ){
         reference.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if(snapshot.key != "current"){
                     isLogedInCallback.postValue(true)
+                    callBackForSignInRequest.postValue(STATUSES.idle)
                 }
             }
 
@@ -61,6 +66,7 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 if(snapshot.key != "current"){
                     isLogedInCallback.postValue(false)
+                    callBackForSignInRequest.postValue(STATUSES.idle)
                 }
 
             }

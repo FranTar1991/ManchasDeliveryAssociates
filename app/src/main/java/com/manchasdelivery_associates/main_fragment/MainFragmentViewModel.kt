@@ -1,7 +1,6 @@
 package com.manchasdelivery_associates.main_fragment
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.DatabaseReference
@@ -63,7 +62,7 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         listenForPendingRequests()
         _userName.value =  getStringFromSharedPreferences(app,app.getString(R.string.user_name))
         _isUserLoggedIn.value = false
-
+        setCallBackForSignInRequest(STATUSES.loading)
     }
 
     fun setCallBackForSignInRequest(value: STATUSES){
@@ -93,11 +92,10 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
 
      fun setServerInDb(server: MDServer, reference: DatabaseReference){
             repo.setServerInDb(server, reference, _callBackForSignInRequest)
-
     }
 
     fun checkServerStatusInDb(reference: DatabaseReference){
-        repo.checkServerStatusInDb(reference, _isUserLoggedIn)
+        repo.checkServerStatusInDb(reference, _isUserLoggedIn, _callBackForSignInRequest)
     }
 
     fun setIsLocationPermissionGranted(result: Boolean){

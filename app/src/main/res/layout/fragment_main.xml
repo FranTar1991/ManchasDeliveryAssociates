@@ -70,7 +70,7 @@
                     android:id="@+id/logIn_logOut_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="@{viewModel.pendingRequestInServer == null}"
+                    android:enabled="@{viewModel.pendingRequestInServer == null &amp;&amp; viewModel.callBackForSignInRequest != STATUSES.loading}"
                     android:text="@{viewModel.isUserLoggedIn() ? @string/log_out : @string/log_in}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -69,6 +69,8 @@ class MainFragment : Fragment() {
             viewModel?.setServerInDb(server,baseReference.child(userId))
         }
 
+            viewModel?.checkServerStatusInDb(baseReference.child(userId))
+
         viewModel?.callBackForSignInRequest?.observe(viewLifecycleOwner) {
 
             if (it == STATUSES.loggedIn || it == STATUSES.loggedOut){
@@ -141,7 +143,7 @@ class MainFragment : Fragment() {
                 })
             }
 
-            viewModel?.checkServerStatusInDb(baseReference.child(userId))
+
 
             binding.markCompleteBtn.setOnClickListener {
 
