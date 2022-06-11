@@ -8,7 +8,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.manchasdelivery_associates.R
 import com.manchasdelivery_associates.utils.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainFragmentViewModel(private val app: Application, private val repo: MainFragmentRepository): AndroidViewModel(app) {
 
@@ -86,16 +88,28 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         }
     }
 
+    fun setCurrentRequestDetails(value: RemoteRequestWithDetails?){
+        _requestDetails.value = value
+    }
+
     fun setOpenWhatsappChatWithNumber(value: String?){
         _openWhatsappChatWithNumber.value = value
     }
 
      fun setServerInDb(server: MDServer, reference: DatabaseReference){
-            repo.setServerInDb(server, reference, _callBackForSignInRequest)
+            repo.setServerInDb(server, reference, _callBackForSignInRequest, _isUserLoggedIn)
     }
 
-    fun checkServerStatusInDb(reference: DatabaseReference){
-        repo.checkServerStatusInDb(reference, _isUserLoggedIn, _callBackForSignInRequest)
+    fun setServerStatusListeners(reference: DatabaseReference){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                launch {
+                    repo.setServerStatusListeners(reference, _isUserLoggedIn, _callBackForSignInRequest)
+                }
+            }
+
+        }
+
     }
 
     fun setIsLocationPermissionGranted(result: Boolean){

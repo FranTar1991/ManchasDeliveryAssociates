@@ -1,5 +1,6 @@
 package com.manchasdelivery_associates.main_fragment
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
@@ -27,35 +28,52 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
         }
     }
 
-     fun setServerInDb(server: MDServer, reference: DatabaseReference,
-                       callback: MutableLiveData<STATUSES>, ) {
+     fun setServerInDb(
+         server: MDServer,
+         reference: DatabaseReference,
+         callback: MutableLiveData<STATUSES>,
+         _isUserLoggedIn: MutableLiveData<Boolean>, ) {
 
          callback.postValue(STATUSES.loading)
 
              reference.get().addOnSuccessListener { snap->
                  if (snap.value != null){
                      snap.ref.removeValue().addOnSuccessListener {
-                         callback.postValue(STATUSES.loggedOut)
+                         callback.postValue(STATUSES.idle)
+                         _isUserLoggedIn.postValue(false)
                      }
                  } else {
                      reference.setValue(server).addOnSuccessListener {
-                         callback.postValue(STATUSES.loggedIn)
+                         callback.postValue(STATUSES.idle)
+                         _isUserLoggedIn.postValue(true)
                      }
                  }
              }
 
     }
 
-    fun checkServerStatusInDb(
+    fun setServerStatusListeners(
         reference: DatabaseReference,
         isLogedInCallback: MutableLiveData<Boolean>,
-        callBackForSignInRequest: MutableLiveData<STATUSES>
+        _callBackForSignInRequest: MutableLiveData<STATUSES>
     ){
+
+        reference.get().addOnSuccessListener {
+
+            if (it.value == null){
+                isLogedInCallback.postValue(false)
+            }else{
+
+               isLogedInCallback.postValue(true)
+            }
+
+            _callBackForSignInRequest.postValue(STATUSES.idle)
+        }
+
         reference.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                if(snapshot.key != "current"){
+                if (snapshot.key != "current" && isLogedInCallback.value == false){
                     isLogedInCallback.postValue(true)
-                    callBackForSignInRequest.postValue(STATUSES.idle)
                 }
             }
 
@@ -64,11 +82,9 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                if(snapshot.key != "current"){
+                if (snapshot.key != "current"&& isLogedInCallback.value == true){
                     isLogedInCallback.postValue(false)
-                    callBackForSignInRequest.postValue(STATUSES.idle)
                 }
-
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -76,6 +92,7 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
             }
 
             override fun onCancelled(error: DatabaseError) {
+
             }
 
         })
@@ -114,9 +131,17 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
 
     private fun parseTheRequest(snapshot: DataSnapshot, requestId: String,
                                 livedata: MutableLiveData<RemoteRequestWithDetails?>){
-        if (snapshot.key == requestId){
-            livedata.postValue(snapshot.getValue(RemoteRequestWithDetails::class.java))
+        val newRequestDetails = snapshot.getValue(RemoteRequestWithDetails::class.java)
+        if (snapshot.key == requestId && !checkIfIsLocationUpdate(livedata.value, newRequestDetails)){
+            livedata.postValue(newRequestDetails)
         }
+    }
+
+    private fun checkIfIsLocationUpdate(currentValue: RemoteRequestWithDetails?, newValue: RemoteRequestWithDetails?): Boolean {
+        val isLocationUpdate = currentValue?.locationBAddressLat == newValue?.locationBAddressLat || currentValue?.locationBAddressLong == newValue?.locationBAddressLong
+
+        Log.i("IsLocationUpdate", "$isLocationUpdate")
+        return isLocationUpdate
     }
 
     fun updateLocationOfDelivery(reference:DatabaseReference, latLng: LatLng) {

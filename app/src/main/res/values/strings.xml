@@ -9,7 +9,7 @@
     <string name="cancel">Cancelar</string>
     <string name="no_requests">Sin solicitudes pendientes</string>
     <string name="Log_in_log_out">LogIn / LogOut</string>
-    <string name="long_status_changed">Tu estado cambió: %s</string>
+    <string name="long_status_changed">Is user logged in? : %s</string>
     <string name="address_separator">%s / %s</string>
     <string name="location_b_address">Dirección B</string>
     <string name="user_address">Dirección A</string>

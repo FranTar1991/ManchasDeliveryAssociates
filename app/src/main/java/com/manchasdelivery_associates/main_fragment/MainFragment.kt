@@ -6,11 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -31,7 +31,7 @@ class MainFragment : Fragment() {
     private lateinit var currentOwnerOfRequestId: String
     private var viewModel: MainFragmentViewModel? = null
     private lateinit var binding: FragmentMainBinding
-    private lateinit var currentRequestWithDetails: RemoteRequestWithDetails
+    private var currentRequestWithDetails: RemoteRequestWithDetails? = null
 
     private lateinit var dbReferenceForUsers: DatabaseReference
     @SuppressLint("MissingPermission")
@@ -68,24 +68,22 @@ class MainFragment : Fragment() {
             val server = getMdServer()
             viewModel?.setServerInDb(server,baseReference.child(userId))
         }
+            viewModel?.setServerStatusListeners(baseReference.child(userId))
 
-            viewModel?.checkServerStatusInDb(baseReference.child(userId))
+        viewModel?.isUserLoggedIn?.observe(viewLifecycleOwner) {
 
-        viewModel?.callBackForSignInRequest?.observe(viewLifecycleOwner) {
+            if (it){
+                viewModel?.getNewToken()
+            }else{
+                binding.locationSw.isChecked = false
+                viewModel?.setCurrentRequestDetails(null)
+            }
 
-            if (it == STATUSES.loggedIn || it == STATUSES.loggedOut){
-                showSnackbar(binding.root, getString(R.string.long_status_changed, it))
-                viewModel?.setCallBackForSignInRequest(STATUSES.idle)
+            showSnackbar(binding.root, getString(R.string.long_status_changed, it.toString()))
 
-                if (it == STATUSES.loggedIn){
-                    viewModel?.getNewToken()
-                }
-
-                viewModel?.setCallBackForSignInRequest(STATUSES.idle)
             }
 
 
-        }
         viewModel?.registrationToken?.observe(viewLifecycleOwner){ token->
             FirebaseAuth.getInstance().currentUser?.uid?.let {
                 sendRegistrationToServer(token, it)
@@ -147,7 +145,7 @@ class MainFragment : Fragment() {
 
             binding.markCompleteBtn.setOnClickListener {
 
-                if(currentRequestWithDetails.price == -1.0){
+                if(currentRequestWithDetails?.price == -1.0){
                     showAlertDialog(getString(R.string.alert), getString(R.string.add_price),activity,hasCancelButton = false){
                         binding.priceTxt.requestFocus()
                     }?.show()
@@ -165,6 +163,7 @@ class MainFragment : Fragment() {
                     showSnackbar(binding.root,getString(R.string.request_status_changed_to, it))
                     stopLocationUpdateService()
                     viewModel?.setRequestStatusChanged(null)
+                    viewModel?.setCurrentRequestDetails(null)
                 }
 
             }
@@ -197,16 +196,17 @@ class MainFragment : Fragment() {
             }
 
             viewModel?.requestDetails?.observe(viewLifecycleOwner){
-                it?.let {
-                    currentRequestWithDetails = it
 
-                    binding.locationSw.apply{
-                        if (!isChecked){
-                            isChecked = true
-                            isEnabled = false
-                        }
-                    }
-                }
+                currentRequestWithDetails = it
+                    it?.let {
+                       binding.locationSw.apply{
+                           if (!isChecked){
+                               isChecked = true
+                               isEnabled = false
+                           }
+                       }
+                   }
+                Log.i("CurrentRequest","$it")
             }
 
             binding.chatImg.setOnClickListener {
@@ -226,7 +226,7 @@ class MainFragment : Fragment() {
         super.onResume()
 
         try {
-            if (!checkGps(context) && currentRequestWithDetails.details != null) {
+            if (!checkGps(context) && currentRequestWithDetails?.details != null) {
                 showAlertDialog(
                     getString(R.string.alert),
                     getString(R.string.turn_on_gps),
@@ -236,7 +236,7 @@ class MainFragment : Fragment() {
                     binding.locationSw.isChecked = false
                     callGPSPageOnSettings(context)
                 }?.show()
-            } else if (checkGps(context) && currentRequestWithDetails.details != null && !binding.locationSw.isChecked){
+            } else if (checkGps(context) && currentRequestWithDetails?.details != null && !binding.locationSw.isChecked){
                 binding.locationSw.isChecked = true
             }
         }catch (e: UninitializedPropertyAccessException){
@@ -282,7 +282,6 @@ class MainFragment : Fragment() {
     }
 
     private fun callLocationUpdateService(userId: String, currentRequestId: String) {
-        binding.locationSw.isChecked = true
         context?.let {
             val intent = Intent(it, LocationUpdateService::class.java)
             intent.putExtra("userId", userId)

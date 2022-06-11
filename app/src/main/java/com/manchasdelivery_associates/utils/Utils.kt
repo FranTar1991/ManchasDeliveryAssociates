@@ -21,7 +21,7 @@ import com.manchasdelivery_associates.R
 
 
 enum class STATUSES{
-  loading, idle,loggedIn, loggedOut
+  loading, idle
 }
 
 enum class GeneralStatus{
