@@ -45,5 +45,5 @@
     <string name="price_changed">Precio actualizado a: %s</string>
     <string name="default_notification_channel_id">ManMan Asoc.</string>
     <string name="fcm_message">Solicitud pendiente</string>
-    <string name="show_price">C$%s</string>
+    <string name="show_price">%s</string>
 </resources>

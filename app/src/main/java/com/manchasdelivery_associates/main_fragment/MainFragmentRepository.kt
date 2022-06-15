@@ -151,7 +151,7 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
         longReference.setValue(latLng.longitude)
     }
 
-    fun updatePriceInUserNodeRef( requestInUserNodeRef: DatabaseReference, price: String?, _priceUpdateCallback: MutableLiveData<String?>){
+    fun updatePriceInUserNodeRef( requestInUserNodeRef: DatabaseReference, price: Double?, _priceUpdateCallback: MutableLiveData<Double?>){
         price?.let {
             requestInUserNodeRef.child("price").setValue(price).addOnSuccessListener {
                 _priceUpdateCallback.postValue(price)

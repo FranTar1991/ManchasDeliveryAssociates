@@ -48,8 +48,8 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
     val requestStatusChanged: LiveData<String?>
         get() = _requestStatusChanged
 
-    private val _priceChanged = MutableLiveData<String?>()
-    val priceChanged: LiveData<String?>
+    private val _priceChanged = MutableLiveData<Double?>()
+    val priceChanged: LiveData<Double?>
         get() = _priceChanged
 
     private val _openWhatsappChatWithNumber= MutableLiveData<String?>()
@@ -128,7 +128,7 @@ class MainFragmentViewModel(private val app: Application, private val repo: Main
         repo.changeRequestStatus(requestInUserNodeRef, status, _requestStatusChanged)
     }
 
-    fun updatePriceInUserNode(price: String, requestInUserNodeRef: DatabaseReference){
+    fun updatePriceInUserNode(price: Double, requestInUserNodeRef: DatabaseReference){
         repo.updatePriceInUserNodeRef(requestInUserNodeRef, price, _priceChanged)
     }
 

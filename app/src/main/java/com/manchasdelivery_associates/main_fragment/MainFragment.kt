@@ -168,7 +168,7 @@ class MainFragment : Fragment() {
 
             }
             binding.updatePriceBtn.setOnClickListener {
-                val newPrice = "C$"+binding.priceTxt.text.toString()
+                val newPrice = binding.priceTxt.text.toString().toDouble()
                 viewModel?.updatePriceInUserNode(newPrice,requestInUserNodeRef)
             }
 
@@ -192,7 +192,7 @@ class MainFragment : Fragment() {
             }
 
             viewModel?.priceChanged?.observe(viewLifecycleOwner){
-                showSnackbar(binding.root.rootView,getString(R.string.price_changed,it))
+                showSnackbar(binding.root.rootView,getString(R.string.price_changed,it.toString()))
             }
 
             viewModel?.requestDetails?.observe(viewLifecycleOwner){
