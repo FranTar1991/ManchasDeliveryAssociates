@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -26,6 +25,7 @@ import com.manchasdelivery_associates.utils.*
 
 class MainFragment : Fragment() {
 
+    private var alreadySentText: Boolean = false
     private lateinit var requestInUserNodeRef: DatabaseReference
     private lateinit var currentRequestId: String
     private lateinit var currentOwnerOfRequestId: String
@@ -164,6 +164,7 @@ class MainFragment : Fragment() {
                     stopLocationUpdateService()
                     viewModel?.setRequestStatusChanged(null)
                     viewModel?.setCurrentRequestDetails(null)
+                    alreadySentText = false
                 }
 
             }
@@ -210,8 +211,16 @@ class MainFragment : Fragment() {
             }
 
             binding.chatImg.setOnClickListener {
-                val text = getTextToSend(viewModel?.userName?.value.toString(), binding.phoneTxt.text.toString())
-                viewModel?.setOpenWhatsappChatWithNumber(text)
+
+                val textToSend = if(!alreadySentText){
+                    alreadySentText = true
+                    getTextToSend(viewModel?.userName?.value.toString(), binding.phoneTxt.text.toString())
+
+                }else{
+                    binding.phoneTxt.text.toString()
+                }
+
+                viewModel?.setOpenWhatsappChatWithNumber(textToSend)
             }
 
 
@@ -252,7 +261,7 @@ class MainFragment : Fragment() {
 
     private fun getTextToSend(userName: String, userPhone: String): String {
        return userPhone+"?text="+
-                getString(R.string.greeting_to_user_eng,userName, viewModel?.requestDetails?.value?.title)
+                getString(R.string.greeting_to_user_eng,userName)
     }
 
     private fun getMdServer(): MDServer {
@@ -266,19 +275,11 @@ class MainFragment : Fragment() {
     }
 
     private fun openWhatsAppWithNumber(number: String){
-        val pm: PackageManager? = activity?.packageManager
-
-        try {
-            // Raise exception if whatsapp doesn't exist
-            val info = pm?.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA)
             val url = "https://wa.me/$number"
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(url)
             startActivity(intent)
-        } catch (e: PackageManager.NameNotFoundException) {
-            Toast.makeText(activity, "Please install whatsapp app", Toast.LENGTH_SHORT)
-                .show()
-        }
+
     }
 
     private fun callLocationUpdateService(userId: String, currentRequestId: String) {

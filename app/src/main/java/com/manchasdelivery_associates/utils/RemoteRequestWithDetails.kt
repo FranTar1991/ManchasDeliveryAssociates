@@ -5,8 +5,8 @@ data class RemoteRequestWithDetails(val details: String? = null,
                                     var userName: String? = null,
 
                                     var userPhone: String? = null,
-                                    val locationBAddressLat: Double? = null,
-                                    val locationBAddressLong: Double? = null,
+                                    val locationBAddressLat: Double? = 0.0,
+                                    val locationBAddressLong: Double? = 0.0,
 
                                     val trackingLat: Double? = null,
                                     val trackingLong: Double? = null,
@@ -21,6 +21,6 @@ data class RemoteRequestWithDetails(val details: String? = null,
 
                                     val type: String? = null,
                                     val userAddressReference: String? = null,
-                                    val locationBAddressReference: String? = null,
+                                    val locationBAddressReference: String? = "No data",
                                     val userAddressLat: Double? = null,
                                     val userAddressLong: Double? = null  )

@@ -132,6 +132,7 @@ class MainFragmentRepository(private val finishedRequestsRef:DatabaseReference,
     private fun parseTheRequest(snapshot: DataSnapshot, requestId: String,
                                 livedata: MutableLiveData<RemoteRequestWithDetails?>){
         val newRequestDetails = snapshot.getValue(RemoteRequestWithDetails::class.java)
+
         if (snapshot.key == requestId && !checkIfIsLocationUpdate(livedata.value, newRequestDetails)){
             livedata.postValue(newRequestDetails)
         }

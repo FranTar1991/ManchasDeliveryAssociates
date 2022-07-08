@@ -32,8 +32,7 @@
     <string name="want_mark_complete">¿Quieres marcar esto como completado?</string>
     <string name="request_status_changed_to">El estado de la solicitud cambió a: %s</string>
     <string name="want_mark_canceled">¿Quieres cancelar ésta solicitud? (ünicamente cuando el cliente solicitó la cancelación)</string>
-    <string name="greeting_to_user_spa">Hola, soy %s de Manchas Delivery. Es en relación a su solicitud con título: %s</string>
-    <string name="greeting_to_user_eng">Hola, soy %s de Manchas Mandados Jinotepe. Ya recibí su solicitud con título: %s , y ya lo estoy procesando.</string>
+    <string name="greeting_to_user_eng">Hola, soy %s, repartidor de Manchas Mandados Jinotepe. Ya estoy procesando su solicitud, porfavor esté atento a su whatsapp en caso de cualquier consulta.</string>
     <string name="want_skip">Esta solicitud va a ser omitida porque el usuario ya la canceló.</string>
     <string name="want_launch_map">¿Quieres abrir google maps?</string>
     <string name="is_switch_on">is switch on</string>
