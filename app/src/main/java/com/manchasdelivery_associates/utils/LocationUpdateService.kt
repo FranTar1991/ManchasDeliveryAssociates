@@ -1,8 +1,6 @@
 package com.manchasdelivery_associates.utils
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.Service
 import android.content.Intent
 import android.location.Location
@@ -75,9 +73,9 @@ class LocationUpdateService(): Service() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult ?: return
 
-                val lat = locationResult.lastLocation.latitude
-                val long = locationResult.lastLocation.longitude
-                val latLong = LatLng(lat,long)
+                val lat = locationResult.lastLocation?.latitude
+                val long = locationResult.lastLocation?.longitude
+                val latLong = LatLng(lat ?: 0.0,long ?: 0.0)
                 updateLocationOfDelivery(fullReference, latLong)
             }
         }
