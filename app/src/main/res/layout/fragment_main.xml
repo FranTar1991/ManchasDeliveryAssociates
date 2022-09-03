@@ -223,18 +223,24 @@
 
 
 
-                    <EditText
+                    <androidx.core.widget.NestedScrollView
                         android:id="@+id/scroll_view"
-                        style="@style/large_text"
+                        android:layout_width="match_parent"
                         android:gravity="top|start"
-                        android:text="@{viewModel.requestDetails.details}"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        android:scrollbars="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/title_txt"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:justificationMode="inter_word" />
+                        android:layout_height="200dp">
+
+                        <TextView
+                            style="@style/large_text"
+                            android:text="@{viewModel.requestDetails.details}"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"/>
+
+                    </androidx.core.widget.NestedScrollView>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
