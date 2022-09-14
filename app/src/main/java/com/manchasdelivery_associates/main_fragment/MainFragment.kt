@@ -272,8 +272,10 @@ class MainFragment : Fragment() {
                phoneNumber = FirebaseAuth.getInstance().currentUser?.phoneNumber)
     }
 
+
     private fun stopLocationUpdateService() {
         binding.locationSw.isChecked = false
+        TODO("This method is not stopping the service")
         context?.stopService(Intent(activity,LocationUpdateService::class.java))
     }
 
